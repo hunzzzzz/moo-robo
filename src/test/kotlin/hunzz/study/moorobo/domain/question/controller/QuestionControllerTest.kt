@@ -62,7 +62,7 @@ class QuestionControllerTest {
     }
 
     @Test
-    @DisplayName("255자를 초과하는 질문 제목이 등록된 경우")
+    @DisplayName("128자를 초과하는 질문 제목이 등록된 경우")
     fun addQuestionException2() {
         mockMvc.perform(
             post("/questions")
