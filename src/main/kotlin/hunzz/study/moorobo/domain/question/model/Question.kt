@@ -13,6 +13,7 @@ class Question(
     @Column(name = "title", nullable = false)
     val title: String,
 
+    @Lob
     @Column(name = "content", nullable = false)
     val content: String
 ) : BaseEntity() {
