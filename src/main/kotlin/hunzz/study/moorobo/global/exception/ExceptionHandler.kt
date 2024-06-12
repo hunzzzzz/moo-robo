@@ -1,5 +1,6 @@
 package hunzz.study.moorobo.global.exception
 
+import hunzz.study.moorobo.global.exception.case.ModelNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -18,4 +19,10 @@ class ExceptionHandler {
             }
             it
         }
+
+    // id로 엔티티 조회 실패
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ModelNotFoundException::class)
+    fun handleModelNotFoundException(e: ModelNotFoundException) =
+        ErrorResponse().addError(null, e.message!!)
 }

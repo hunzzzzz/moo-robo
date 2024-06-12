@@ -6,11 +6,11 @@ data class ErrorResponse(
     val errors: MutableList<Error> = mutableListOf(),
     val time: LocalDateTime = LocalDateTime.now()
 ) {
-    fun addError(field: String, message: String) =
+    fun addError(field: String?, message: String) =
         errors.add(Error(field = field, message = message))
 
     data class Error(
-        var field: String,
+        var field: String?,
         val message: String
     )
 }

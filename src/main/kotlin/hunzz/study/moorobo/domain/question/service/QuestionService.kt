@@ -2,7 +2,9 @@ package hunzz.study.moorobo.domain.question.service
 
 import hunzz.study.moorobo.domain.question.dto.AddQuestionRequest
 import hunzz.study.moorobo.domain.question.dto.QuestionResponse
+import hunzz.study.moorobo.domain.question.model.Question
 import hunzz.study.moorobo.domain.question.repository.QuestionRepository
+import hunzz.study.moorobo.global.exception.case.ModelNotFoundException
 import org.springframework.context.annotation.Description
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -13,7 +15,8 @@ class QuestionService(
 ) {
     @Description("질문 id로 질문 엔티티를 가져오는 내부 메서드")
     private fun getQuestionById(questionId: Long) =
-        questionRepository.findByIdOrNull(questionId) ?: throw Exception("") // TODO : 추후 별도의 Exception 생성
+        questionRepository.findByIdOrNull(questionId)
+            ?: throw ModelNotFoundException(Question::class.simpleName.toString())
 
     @Description("질문 등록")
     fun addQuestion(request: AddQuestionRequest) =
