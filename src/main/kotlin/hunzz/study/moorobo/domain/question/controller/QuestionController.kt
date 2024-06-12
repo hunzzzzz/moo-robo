@@ -5,10 +5,7 @@ import hunzz.study.moorobo.domain.question.service.QuestionService
 import jakarta.validation.Valid
 import org.springframework.context.annotation.Description
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.net.URI
 
 @RestController
@@ -21,4 +18,9 @@ class QuestionController(
     fun addQuestion(@Valid @RequestBody request: AddQuestionRequest) =
         questionService.addQuestion(request)
             .let { ResponseEntity.created(URI.create("/questions/${it.id}")).body(it) }
+
+    @GetMapping("/{questionId}")
+    @Description("질문 단건 조회")
+    fun findQuestion(@PathVariable questionId: Long) =
+        questionService.findQuestion(questionId)
 }
