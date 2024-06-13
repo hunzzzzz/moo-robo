@@ -51,7 +51,34 @@ class QuestionServiceTest {
         val question = questionService.findQuestion(existingQuestion.id!!)
 
         // then
+        assertEquals(existingQuestion.id, question.id)
         assertEquals("테스트 제목", question.title)
         assertEquals("테스트 내용", question.content)
+    }
+
+    @Test
+    @DisplayName("질문 목록 조회")
+    fun findQuestions() {
+        // given
+        (1..AMOUNT_OF_QUESTIONS).forEach {
+            Question(status = QuestionStatus.NORMAL, title = "테스트 제목${it}", content = "테스트 내용${it}")
+                .let { q -> questionRepository.save(q) }
+        }
+
+        // when
+        val firstPage = questionService.findQuestions(1)
+        val lastPage = questionService.findQuestions(AMOUNT_OF_QUESTIONS / QUESTION_PAGE_SIZE)
+
+        // then
+        assertEquals(QUESTION_PAGE_SIZE, firstPage.size)
+        assertEquals("테스트 제목${AMOUNT_OF_QUESTIONS}", firstPage.first().title)
+        assertEquals("테스트 내용${AMOUNT_OF_QUESTIONS}", firstPage.first().content)
+        assertEquals("테스트 제목1", lastPage.last().title)
+        assertEquals("테스트 내용1", lastPage.last().content)
+    }
+
+    companion object {
+        const val QUESTION_PAGE_SIZE = 10 // 한 페이지의 크기
+        const val AMOUNT_OF_QUESTIONS = 50 // 페이징 테스트를 위해 만든 더미 질문의 개수
     }
 }

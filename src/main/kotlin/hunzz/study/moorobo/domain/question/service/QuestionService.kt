@@ -6,6 +6,9 @@ import hunzz.study.moorobo.domain.question.model.Question
 import hunzz.study.moorobo.domain.question.repository.QuestionRepository
 import hunzz.study.moorobo.global.exception.case.ModelNotFoundException
 import org.springframework.context.annotation.Description
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
+import org.springframework.data.domain.Sort.Direction.DESC
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -28,4 +31,13 @@ class QuestionService(
     fun findQuestion(questionId: Long) =
         getQuestionById(questionId)
             .let { QuestionResponse.from(it) }
+
+    @Description("질문 목록 조회")
+    fun findQuestions(page: Int) =
+        PageRequest.of(page - 1, QUESTION_PAGE_SIZE, Sort.by(DESC, "id"))
+            .let { questionRepository.findAll(it).map { q -> QuestionResponse.from(q) } }
+
+    companion object {
+        private const val QUESTION_PAGE_SIZE = 10
+    }
 }

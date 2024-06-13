@@ -5,6 +5,7 @@ import hunzz.study.moorobo.domain.question.dto.AddQuestionRequest
 import hunzz.study.moorobo.domain.question.model.Question
 import hunzz.study.moorobo.domain.question.model.QuestionStatus
 import hunzz.study.moorobo.domain.question.repository.QuestionRepository
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,6 +30,11 @@ class QuestionControllerTest {
 
     @Autowired
     lateinit var questionRepository: QuestionRepository
+
+    @BeforeEach
+    fun clean() {
+        questionRepository.deleteAll()
+    }
 
     @Test
     @DisplayName("정상적으로 질문이 등록되는 경우")
@@ -106,5 +112,31 @@ class QuestionControllerTest {
             .andExpect(jsonPath("$.id").value(existingQuestion.id))
             .andExpect(jsonPath("$.title").value("테스트 제목"))
             .andExpect(jsonPath("$.content").value("테스트 내용"))
+            .andDo(print())
+    }
+
+    @Test
+    @DisplayName("정상적으로 질문 목록이 페이징이 적용된 채 조회된 경우")
+    fun findQuestions() {
+        // given
+        (1..AMOUNT_OF_QUESTIONS).forEach {
+            Question(status = QuestionStatus.NORMAL, title = "테스트 제목${it}", content = "테스트 내용${it}")
+                .let { q -> questionRepository.save(q) }
+        }
+
+        // expected
+        mockMvc.perform(
+            get("/questions?page=1")
+                .contentType(APPLICATION_JSON)
+        ).andExpect(status().isOk)
+            .andExpect(jsonPath("$.content.size()").value(QUESTION_PAGE_SIZE))
+            .andExpect(jsonPath("$.content[0].title").value("테스트 제목${AMOUNT_OF_QUESTIONS}"))
+            .andExpect(jsonPath("$.content[0].content").value("테스트 내용${AMOUNT_OF_QUESTIONS}"))
+            .andDo(print())
+    }
+
+    companion object {
+        const val QUESTION_PAGE_SIZE = 10 // 한 페이지의 크기
+        const val AMOUNT_OF_QUESTIONS = 50 // 페이징 테스트를 위해 만든 더미 질문의 개수
     }
 }

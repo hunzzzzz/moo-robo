@@ -22,5 +22,10 @@ class QuestionController(
     @GetMapping("/{questionId}")
     @Description("질문 단건 조회")
     fun findQuestion(@PathVariable questionId: Long) =
-        questionService.findQuestion(questionId)
+        ResponseEntity.ok().body(questionService.findQuestion(questionId))
+
+    @GetMapping
+    @Description("질문 목록 조회")
+    fun findQuestions(@RequestParam page: Int) =
+        ResponseEntity.ok().body(questionService.findQuestions(page))
 }
