@@ -4,6 +4,7 @@ plugins {
 	kotlin("jvm") version "1.9.24"
 	kotlin("plugin.spring") version "1.9.24"
 	kotlin("plugin.jpa") version "1.9.24"
+	kotlin("kapt") version "2.0.0"
 }
 
 group = "hunzz.study"
@@ -23,6 +24,9 @@ dependencies {
 	// DB
 	runtimeOnly("com.h2database:h2")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	// QUERYDSL
+	implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
+	kapt("com.querydsl:querydsl-apt:5.1.0:jakarta")
 	// SWAGGER
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 	// TEST
