@@ -26,6 +26,6 @@ class QuestionController(
 
     @GetMapping
     @Description("질문 목록 조회")
-    fun findQuestions(@RequestParam page: Int) =
+    fun findQuestions(@RequestParam(defaultValue = "1") page: Int) =
         ResponseEntity.ok().body(questionService.findQuestions(page))
 }

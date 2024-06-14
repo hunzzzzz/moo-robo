@@ -135,6 +135,26 @@ class QuestionControllerTest {
             .andDo(print())
     }
 
+    @Test
+    @DisplayName("정상적으로 질문 목록이 페이징이 적용된 채 조회된 경우 (page에 값을 대입 X)")
+    fun findQuestions2() {
+        // given
+        (1..AMOUNT_OF_QUESTIONS).forEach {
+            Question(status = QuestionStatus.NORMAL, title = "테스트 제목${it}", content = "테스트 내용${it}")
+                .let { q -> questionRepository.save(q) }
+        }
+
+        // expected
+        mockMvc.perform(
+            get("/questions")
+                .contentType(APPLICATION_JSON)
+        ).andExpect(status().isOk)
+            .andExpect(jsonPath("$.content.size()").value(QUESTION_PAGE_SIZE))
+            .andExpect(jsonPath("$.content[0].title").value("테스트 제목${AMOUNT_OF_QUESTIONS}"))
+            .andExpect(jsonPath("$.content[0].content").value("테스트 내용${AMOUNT_OF_QUESTIONS}"))
+            .andDo(print())
+    }
+
     companion object {
         const val QUESTION_PAGE_SIZE = 10 // 한 페이지의 크기
         const val AMOUNT_OF_QUESTIONS = 50 // 페이징 테스트를 위해 만든 더미 질문의 개수
