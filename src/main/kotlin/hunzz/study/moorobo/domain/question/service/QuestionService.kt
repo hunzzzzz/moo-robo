@@ -4,6 +4,7 @@ import hunzz.study.moorobo.domain.question.dto.AddQuestionRequest
 import hunzz.study.moorobo.domain.question.dto.QuestionResponse
 import hunzz.study.moorobo.domain.question.dto.UpdateQuestionRequest
 import hunzz.study.moorobo.domain.question.model.Question
+import hunzz.study.moorobo.domain.question.model.QuestionStatus
 import hunzz.study.moorobo.domain.question.repository.QuestionRepository
 import hunzz.study.moorobo.global.exception.case.ModelNotFoundException
 import jakarta.transaction.Transactional
@@ -47,6 +48,11 @@ class QuestionService(
     fun updateQuestion(questionId: Long, request: UpdateQuestionRequest) =
         getQuestionById(questionId).update(title = request.title, content = request.content)
             .let { QuestionResponse.from(it) }
+
+    @Transactional
+    @Description("질문 삭제")
+    fun deleteQuestion(questionId: Long) =
+        getQuestionById(questionId).delete()
 
     companion object {
         private const val QUESTION_PAGE_SIZE = 10

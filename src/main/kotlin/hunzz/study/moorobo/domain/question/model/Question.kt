@@ -8,7 +8,7 @@ import jakarta.persistence.*
 class Question(
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    val status: QuestionStatus,
+    var status: QuestionStatus,
 
     @Column(name = "title", nullable = false)
     var title: String,
@@ -26,5 +26,9 @@ class Question(
         this.title = title
         this.content = content
         return this
+    }
+
+    fun delete() {
+        this.status = QuestionStatus.DELETED
     }
 }

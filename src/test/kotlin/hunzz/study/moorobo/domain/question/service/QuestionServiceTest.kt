@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.repository.findByIdOrNull
 
 @SpringBootTest
 class QuestionServiceTest {
@@ -94,6 +95,25 @@ class QuestionServiceTest {
         assertEquals(true, existingQuestion.id == question.id)
         assertEquals("수정된 테스트 제목", question.title)
         assertEquals("수정된 테스트 내용", question.content)
+    }
+
+    @Test
+    @DisplayName("질문 삭제")
+    fun deleteQuestion() {
+        // given
+        val existingQuestion =
+            Question(status = QuestionStatus.NORMAL, title = "테스트 제목", content = "테스트 내용")
+                .let { questionRepository.save(it) }
+
+        // when
+        questionService.deleteQuestion(existingQuestion.id!!)
+        val question = questionRepository.findByIdOrNull(existingQuestion.id)!!
+
+        // then
+        assertEquals(1, questionRepository.count())
+        assertEquals(QuestionStatus.DELETED, question.status)
+        assertEquals(existingQuestion.title, question.title)
+        assertEquals(existingQuestion.content, question.content)
     }
 
     companion object {
