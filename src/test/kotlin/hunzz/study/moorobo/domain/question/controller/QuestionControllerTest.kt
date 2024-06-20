@@ -2,6 +2,7 @@ package hunzz.study.moorobo.domain.question.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import hunzz.study.moorobo.domain.question.dto.AddQuestionRequest
+import hunzz.study.moorobo.domain.question.dto.UpdateQuestionRequest
 import hunzz.study.moorobo.domain.question.model.Question
 import hunzz.study.moorobo.domain.question.model.QuestionStatus
 import hunzz.study.moorobo.domain.question.repository.QuestionRepository
@@ -13,8 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -153,6 +153,28 @@ class QuestionControllerTest {
             .andExpect(jsonPath("$.content[0].title").value("테스트 제목${AMOUNT_OF_QUESTIONS}"))
             .andExpect(jsonPath("$.content[0].content").value("테스트 내용${AMOUNT_OF_QUESTIONS}"))
             .andDo(print())
+    }
+
+    @Test
+    @DisplayName("정상적으로 질문이 수정되는 경우")
+    fun updateQuestion() {
+        // given
+        val existingQuestion =
+            Question(status = QuestionStatus.NORMAL, title = "테스트 제목", content = "테스트 내용")
+                .let { questionRepository.save(it) }
+        val json = objectMapper.writeValueAsString(
+            UpdateQuestionRequest(title = "수정된 테스트 제목", content = "수정된 테스트 내용")
+        )
+
+        // expected
+        mockMvc.perform(
+            put("/questions/{questionId}", existingQuestion.id)
+                .contentType(APPLICATION_JSON)
+                .content(json)
+        ).andExpect(status().isOk)
+            .andExpect(jsonPath("$.id").value(existingQuestion.id))
+            .andExpect(jsonPath("$.title").value("수정된 테스트 제목"))
+            .andExpect(jsonPath("$.content").value("수정된 테스트 내용"))
     }
 
     companion object {

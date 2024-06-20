@@ -1,6 +1,7 @@
 package hunzz.study.moorobo.domain.question.service
 
 import hunzz.study.moorobo.domain.question.dto.AddQuestionRequest
+import hunzz.study.moorobo.domain.question.dto.UpdateQuestionRequest
 import hunzz.study.moorobo.domain.question.model.Question
 import hunzz.study.moorobo.domain.question.model.QuestionStatus
 import hunzz.study.moorobo.domain.question.repository.QuestionRepository
@@ -75,6 +76,24 @@ class QuestionServiceTest {
         assertEquals("테스트 내용${AMOUNT_OF_QUESTIONS}", firstPage.first().content)
         assertEquals("테스트 제목1", lastPage.last().title)
         assertEquals("테스트 내용1", lastPage.last().content)
+    }
+
+    @Test
+    @DisplayName("질문 수정")
+    fun updateQuestion() {
+        // given
+        val existingQuestion =
+            Question(status = QuestionStatus.NORMAL, title = "테스트 제목", content = "테스트 내용")
+                .let { questionRepository.save(it) }
+        val request = UpdateQuestionRequest(title = "수정된 테스트 제목", content = "수정된 테스트 내용")
+
+        // when
+        val question = questionService.updateQuestion(existingQuestion.id!!, request)
+
+        // then
+        assertEquals(true, existingQuestion.id == question.id)
+        assertEquals("수정된 테스트 제목", question.title)
+        assertEquals("수정된 테스트 내용", question.content)
     }
 
     companion object {
