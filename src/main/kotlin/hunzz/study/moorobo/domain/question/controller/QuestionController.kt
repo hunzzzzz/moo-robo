@@ -34,4 +34,9 @@ class QuestionController(
     @Description("질문 수정")
     fun updateQuestion(@PathVariable questionId: Long, @Valid @RequestBody request: UpdateQuestionRequest) =
         ResponseEntity.ok().body(questionService.updateQuestion(questionId, request))
+
+    @DeleteMapping("/{questionId}")
+    @Description("질문 삭제")
+    fun deleteQuestion(@PathVariable questionId: Long) =
+        ResponseEntity.ok().body(questionService.deleteQuestion(questionId))
 }

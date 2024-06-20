@@ -175,6 +175,23 @@ class QuestionControllerTest {
             .andExpect(jsonPath("$.id").value(existingQuestion.id))
             .andExpect(jsonPath("$.title").value("수정된 테스트 제목"))
             .andExpect(jsonPath("$.content").value("수정된 테스트 내용"))
+            .andDo(print())
+    }
+
+    @Test
+    @DisplayName("정상적으로 질문이 삭제되는 경우")
+    fun deleteQuestion() {
+        // given
+        val existingQuestion =
+            Question(status = QuestionStatus.NORMAL, title = "테스트 제목", content = "테스트 내용")
+                .let { questionRepository.save(it) }
+
+        // expected
+        mockMvc.perform(
+            delete("/questions/{questionId}", existingQuestion.id)
+                .contentType(APPLICATION_JSON)
+        ).andExpect(status().isOk)
+            .andDo(print())
     }
 
     companion object {
