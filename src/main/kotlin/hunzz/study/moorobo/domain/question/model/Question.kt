@@ -11,14 +11,20 @@ class Question(
     val status: QuestionStatus,
 
     @Column(name = "title", nullable = false)
-    val title: String,
+    var title: String,
 
     @Lob
     @Column(name = "content", nullable = false)
-    val content: String
+    var content: String
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_id", nullable = false, unique = true)
     val id: Long? = null
+
+    fun update(title: String, content: String): Question {
+        this.title = title
+        this.content = content
+        return this
+    }
 }

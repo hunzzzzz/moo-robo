@@ -1,6 +1,7 @@
 package hunzz.study.moorobo.domain.question.controller
 
 import hunzz.study.moorobo.domain.question.dto.AddQuestionRequest
+import hunzz.study.moorobo.domain.question.dto.UpdateQuestionRequest
 import hunzz.study.moorobo.domain.question.service.QuestionService
 import jakarta.validation.Valid
 import org.springframework.context.annotation.Description
@@ -28,4 +29,9 @@ class QuestionController(
     @Description("질문 목록 조회")
     fun findQuestions(@RequestParam(defaultValue = "1") page: Int) =
         ResponseEntity.ok().body(questionService.findQuestions(page))
+
+    @PutMapping("/{questionId}")
+    @Description("질문 수정")
+    fun updateQuestion(@PathVariable questionId: Long, @Valid @RequestBody request: UpdateQuestionRequest) =
+        ResponseEntity.ok().body(questionService.updateQuestion(questionId, request))
 }

@@ -2,9 +2,11 @@ package hunzz.study.moorobo.domain.question.service
 
 import hunzz.study.moorobo.domain.question.dto.AddQuestionRequest
 import hunzz.study.moorobo.domain.question.dto.QuestionResponse
+import hunzz.study.moorobo.domain.question.dto.UpdateQuestionRequest
 import hunzz.study.moorobo.domain.question.model.Question
 import hunzz.study.moorobo.domain.question.repository.QuestionRepository
 import hunzz.study.moorobo.global.exception.case.ModelNotFoundException
+import jakarta.transaction.Transactional
 import org.springframework.context.annotation.Description
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
@@ -39,6 +41,12 @@ class QuestionService(
     fun findQuestions(page: Int) =
         PageRequest.of(page - 1, QUESTION_PAGE_SIZE)
             .let { questionRepository.findQuestions(it).map { q -> QuestionResponse.from(q) } }
+
+    @Transactional
+    @Description("질문 수정")
+    fun updateQuestion(questionId: Long, request: UpdateQuestionRequest) =
+        getQuestionById(questionId).update(title = request.title, content = request.content)
+            .let { QuestionResponse.from(it) }
 
     companion object {
         private const val QUESTION_PAGE_SIZE = 10
