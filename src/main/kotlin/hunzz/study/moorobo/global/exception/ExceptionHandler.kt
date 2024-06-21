@@ -24,5 +24,8 @@ class ExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ModelNotFoundException::class)
     fun handleModelNotFoundException(e: ModelNotFoundException) =
-        ErrorResponse().addError(null, e.message!!)
+        ErrorResponse().let {
+            it.addError(null, e.message!!)
+            it
+        }
 }

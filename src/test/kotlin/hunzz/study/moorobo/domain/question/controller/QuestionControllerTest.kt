@@ -56,7 +56,7 @@ class QuestionControllerTest {
     }
 
     @Test
-    @DisplayName("질문의 내용을 미입력한 경우")
+    @DisplayName("질문 등록 시, 질문의 내용을 미입력한 경우")
     fun addQuestionException1() {
         // given
         val json = objectMapper.writeValueAsString(
@@ -76,7 +76,7 @@ class QuestionControllerTest {
     }
 
     @Test
-    @DisplayName("128자를 초과하는 질문 제목이 등록된 경우")
+    @DisplayName("질문 등록 시, 128자를 초과하는 질문 제목이 등록된 경우")
     fun addQuestionException2() {
         // given
         val json = objectMapper.writeValueAsString(
@@ -112,6 +112,25 @@ class QuestionControllerTest {
             .andExpect(jsonPath("$.id").value(existingQuestion.id))
             .andExpect(jsonPath("$.title").value("테스트 제목"))
             .andExpect(jsonPath("$.content").value("테스트 내용"))
+            .andDo(print())
+    }
+
+    @Test
+    @DisplayName("질문 조회 시, id에 해당하는 질문이 존재하지 않는 경우")
+    fun findQuestionException() {
+        // given
+        val existingQuestion =
+            Question(status = QuestionStatus.NORMAL, title = "테스트 제목", content = "테스트 내용")
+                .let { questionRepository.save(it) }
+
+        // expected
+        mockMvc.perform(
+            get("/questions/{questionId}", existingQuestion.id!! + 1)
+        ).andExpect(status().isNotFound)
+            .andExpect(jsonPath("$.errors").isArray)
+            .andExpect(jsonPath("$.errors.size()").value(1))
+            .andExpect(jsonPath("$.errors[0].field").value(null))
+            .andExpect(jsonPath("$.errors[0].message").value("존재하지 않는 질문입니다."))
             .andDo(print())
     }
 

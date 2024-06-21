@@ -4,7 +4,6 @@ import hunzz.study.moorobo.domain.question.dto.AddQuestionRequest
 import hunzz.study.moorobo.domain.question.dto.QuestionResponse
 import hunzz.study.moorobo.domain.question.dto.UpdateQuestionRequest
 import hunzz.study.moorobo.domain.question.model.Question
-import hunzz.study.moorobo.domain.question.model.QuestionStatus
 import hunzz.study.moorobo.domain.question.repository.QuestionRepository
 import hunzz.study.moorobo.global.exception.case.ModelNotFoundException
 import jakarta.transaction.Transactional
