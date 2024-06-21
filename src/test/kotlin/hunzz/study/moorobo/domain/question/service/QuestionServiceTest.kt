@@ -5,7 +5,9 @@ import hunzz.study.moorobo.domain.question.dto.UpdateQuestionRequest
 import hunzz.study.moorobo.domain.question.model.Question
 import hunzz.study.moorobo.domain.question.model.QuestionStatus
 import hunzz.study.moorobo.domain.question.repository.QuestionRepository
+import hunzz.study.moorobo.global.exception.case.ModelNotFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -56,6 +58,20 @@ class QuestionServiceTest {
         assertEquals(existingQuestion.id, question.id)
         assertEquals("테스트 제목", question.title)
         assertEquals("테스트 내용", question.content)
+    }
+
+    @Test
+    @DisplayName("질문 단건 조회 시, 존재하지 않는 id를 대입한 경우 (ModelNotFoundException)")
+    fun findQuestionException() {
+        // given
+        val existingQuestion =
+            Question(status = QuestionStatus.NORMAL, title = "테스트 제목", content = "테스트 내용")
+                .let { questionRepository.save(it) }
+
+        // expected
+        assertThrows(ModelNotFoundException::class.java) {
+            questionService.findQuestion(existingQuestion.id!! + 1)
+        }.let { assertEquals("존재하지 않는 질문입니다.", it.message) }
     }
 
     @Test
