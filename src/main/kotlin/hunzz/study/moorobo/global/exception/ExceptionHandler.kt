@@ -1,7 +1,9 @@
 package hunzz.study.moorobo.global.exception
 
 import hunzz.study.moorobo.global.exception.case.ModelNotFoundException
+import hunzz.study.moorobo.global.exception.case.QuestionException
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -28,4 +30,14 @@ class ExceptionHandler {
             it.addError(null, e.message!!)
             it
         }
+
+    // Question 관련 예외 처리
+    @ExceptionHandler(QuestionException::class)
+    fun handleQuestionException(e: QuestionException) =
+        ResponseEntity.status(Integer.parseInt(e.statusCode)).body(
+            ErrorResponse().let {
+                it.errors = e.errors
+                it
+            }
+        )
 }

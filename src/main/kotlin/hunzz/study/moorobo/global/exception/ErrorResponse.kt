@@ -3,7 +3,7 @@ package hunzz.study.moorobo.global.exception
 import java.time.LocalDateTime
 
 data class ErrorResponse(
-    val errors: MutableList<Error> = mutableListOf(),
+    var errors: MutableList<Error> = mutableListOf(),
     val time: LocalDateTime = LocalDateTime.now()
 ) {
     fun addError(field: String?, message: String) =
