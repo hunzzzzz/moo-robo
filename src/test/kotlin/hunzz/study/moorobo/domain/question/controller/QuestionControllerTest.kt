@@ -97,6 +97,48 @@ class QuestionControllerTest {
     }
 
     @Test
+    @DisplayName("질문 등록 시, 질문 내용에 비속어가 포함된 경우")
+    fun addQuestionException3() {
+        // given
+        val json = objectMapper.writeValueAsString(
+            AddQuestionRequest(title = "테스트 제목", content = "욕설이 포함된 테스트 내용")
+        )
+
+        // expected
+        mockMvc.perform(
+            post("/questions")
+                .contentType(APPLICATION_JSON)
+                .content(json)
+        ).andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.errors").isArray)
+            .andExpect(jsonPath("$.errors.size()").value(1))
+            .andExpect(jsonPath("$.errors[0].field").value("content"))
+            .andExpect(jsonPath("$.errors[0].message").value("질문 내용에 비속어가 포함되어 있습니다."))
+            .andDo(print())
+    }
+
+    @Test
+    @DisplayName("질문 등록 시, 질문 내용에 구분자를 활용한 비속어가 포함된 경우")
+    fun addQuestionException4() {
+        // given
+        val json = objectMapper.writeValueAsString(
+            AddQuestionRequest(title = "테스트 제목", content = "욕1설이 포함된 테스트 내용")
+        )
+
+        // expected
+        mockMvc.perform(
+            post("/questions")
+                .contentType(APPLICATION_JSON)
+                .content(json)
+        ).andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.errors").isArray)
+            .andExpect(jsonPath("$.errors.size()").value(1))
+            .andExpect(jsonPath("$.errors[0].field").value("content"))
+            .andExpect(jsonPath("$.errors[0].message").value("질문 내용에 비속어가 포함되어 있습니다."))
+            .andDo(print())
+    }
+
+    @Test
     @DisplayName("정상적으로 질문이 조회된 경우")
     fun findQuestion() {
         // given

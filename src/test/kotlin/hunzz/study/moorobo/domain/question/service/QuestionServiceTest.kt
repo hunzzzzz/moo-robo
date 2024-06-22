@@ -5,6 +5,7 @@ import hunzz.study.moorobo.domain.question.dto.UpdateQuestionRequest
 import hunzz.study.moorobo.domain.question.model.Question
 import hunzz.study.moorobo.domain.question.model.QuestionStatus
 import hunzz.study.moorobo.domain.question.repository.QuestionRepository
+import hunzz.study.moorobo.global.exception.case.BannedWordInQuestionException
 import hunzz.study.moorobo.global.exception.case.ModelNotFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -44,6 +45,38 @@ class QuestionServiceTest {
     }
 
     @Test
+    @DisplayName("질문 등록 시, 제목이나 내용에 비속어가 포함된 경우 BannedWordInQuestionException")
+    fun addQuestionException1() {
+        // given
+        val request1 = AddQuestionRequest(title = "욕설이 포함된 테스트 제목", content = "테스트 내용")
+        val request2 = AddQuestionRequest(title = "테스트 제목", content = "테스트 내용 내 욕설 포함")
+
+        // expected
+        assertThrows(BannedWordInQuestionException::class.java) {
+            questionService.addQuestion(request1)
+        }.let { assertEquals("질문 제목에 비속어가 포함되어 있습니다.", it.message) }
+        assertThrows(BannedWordInQuestionException::class.java) {
+            questionService.addQuestion(request2)
+        }.let { assertEquals("질문 내용에 비속어가 포함되어 있습니다.", it.message) }
+    }
+
+    @Test
+    @DisplayName("질문 등록 시, 제목이나 내용에 구분자를 활용한 비속어가 포함된 경우 BannedWordInQuestionException")
+    fun addQuestionException2() {
+        // given
+        val request1 = AddQuestionRequest(title = "욕1설이 포함된 테스트 제목", content = "테스트 내용")
+        val request2 = AddQuestionRequest(title = "테스트 제목", content = "테스트 내용 내 욕@설 포함")
+
+        // expected
+        assertThrows(BannedWordInQuestionException::class.java) {
+            questionService.addQuestion(request1)
+        }.let { assertEquals("질문 제목에 비속어가 포함되어 있습니다.", it.message) }
+        assertThrows(BannedWordInQuestionException::class.java) {
+            questionService.addQuestion(request2)
+        }.let { assertEquals("질문 내용에 비속어가 포함되어 있습니다.", it.message) }
+    }
+
+    @Test
     @DisplayName("질문 단건 조회")
     fun findQuestion() {
         // given
@@ -61,7 +94,7 @@ class QuestionServiceTest {
     }
 
     @Test
-    @DisplayName("질문 단건 조회 시, 존재하지 않는 id를 대입한 경우 (ModelNotFoundException)")
+    @DisplayName("질문 단건 조회 시, 존재하지 않는 id를 대입한 경우 ModelNotFoundException")
     fun findQuestionException() {
         // given
         val existingQuestion =
