@@ -1,6 +1,7 @@
 package hunzz.study.moorobo.domain.question.service
 
 import hunzz.study.moorobo.domain.question.dto.AddQuestionRequest
+import hunzz.study.moorobo.domain.question.dto.QuestionPageResponse
 import hunzz.study.moorobo.domain.question.dto.QuestionResponse
 import hunzz.study.moorobo.domain.question.dto.UpdateQuestionRequest
 import hunzz.study.moorobo.domain.question.model.Question
@@ -43,6 +44,7 @@ class QuestionService(
     fun findQuestions(page: Int) =
         PageRequest.of(page - 1, QUESTION_PAGE_SIZE)
             .let { questionRepository.findQuestions(it).map { q -> QuestionResponse.from(q) } }
+            .let { QuestionPageResponse.from(it) }
 
     @Transactional
     @Description("질문 수정")
