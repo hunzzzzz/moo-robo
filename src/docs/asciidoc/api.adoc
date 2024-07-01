@@ -1,0 +1,75 @@
+// Ascii Doc 서식
+:doctype: book
+:icons: font
+:source-highlighter: highlight.js
+:toc: left
+:toclevels: 4
+:sectnums:
+:sectlinks:
+:sectanchors:
+
+// snippet 경로
+:snippets: ./build/generated-snippets
+
+= 🤖 무로보 (Moo-Robo) REST API Docs
+:toc:
+
+== 질문 등록
+
+=== 요청
+
+include::{snippets}/question-create/http-request.adoc[]
+include::{snippets}/question-create/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/question-read/http-response.adoc[]
+include::{snippets}/question-read/response-fields.adoc[]
+
+== 질문 단건 조회
+
+=== 요청
+
+include::{snippets}/question-read/http-request.adoc[]
+include::{snippets}/question-read/path-parameters.adoc[]
+
+=== 응답
+
+include::{snippets}/question-read/http-response.adoc[]
+include::{snippets}/question-read/response-fields.adoc[]
+
+== 질문 목록 조회
+
+=== 요청
+
+include::{snippets}/question-read-all/http-request.adoc[]
+include::{snippets}/question-read-all/query-parameters.adoc[]
+
+=== 응답
+
+include::{snippets}/question-read-all/http-response.adoc[]
+include::{snippets}/question-read-all/response-fields.adoc[]
+
+== 질문 수정
+
+=== 요청
+
+include::{snippets}/question-update/http-request.adoc[]
+include::{snippets}/question-update/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/question-update/http-response.adoc[]
+include::{snippets}/question-update/response-fields.adoc[]
+
+== 질문 삭제
+
+=== 요청
+
+include::{snippets}/question-delete/http-request.adoc[]
+include::{snippets}/question-delete/path-parameters.adoc[]
+
+=== 응답
+``
+include::{snippets}/question-delete/http-response.adoc[]
+

@@ -68,7 +68,7 @@ tasks {
         dependsOn(test)
 
         // 문서 최신화 (기존에 존재하는 Docs 삭제)
-        doFirst { delete(file("src/main/resources/static/docs")) }
+        doFirst { delete(file("src/main/resources/static/docs/api.html")) }
 
         // snippet 경로 설정
         inputs.dir(snippetsDir)
