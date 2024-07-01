@@ -122,10 +122,10 @@ class QuestionServiceTest {
 
         // then
         assertEquals(QUESTION_PAGE_SIZE, firstPage.size)
-        assertEquals("테스트 제목${AMOUNT_OF_QUESTIONS}", firstPage.first().title)
-        assertEquals("테스트 내용${AMOUNT_OF_QUESTIONS}", firstPage.first().content)
-        assertEquals("테스트 제목1", lastPage.last().title)
-        assertEquals("테스트 내용1", lastPage.last().content)
+        assertEquals("테스트 제목${AMOUNT_OF_QUESTIONS}", firstPage.content.first().title)
+        assertEquals("테스트 내용${AMOUNT_OF_QUESTIONS}", firstPage.content.first().content)
+        assertEquals("테스트 제목1", lastPage.content.last().title)
+        assertEquals("테스트 내용1", lastPage.content.last().content)
     }
 
     @Test
